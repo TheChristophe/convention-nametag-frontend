@@ -1,0 +1,7 @@
+[shaders]
+text.fragment = "res/shaders/text.f.glsl"
+text.vertex = "res/shaders/text.v.glsl"
+triangle.fragment = "res/shaders/triangle.f.glsl"
+triangle.vertex = "res/shaders/triangle.v.glsl"
+sprite.fragment = "res/shaders/sprite.f.glsl"
+sprite.vertex = "res/shaders/sprite.v.glsl"
