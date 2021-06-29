@@ -23,9 +23,20 @@ VideoPlayer::VideoPlayer(const char *filename, int width, int height)
         throw std::runtime_error("failed to find video stream!");
     }
 
-    const AVCodec *codec = avcodec_find_decoder(_codecParameters->codec_id);
+    const AVCodec *codec = nullptr;
+    // raspberry pi hardware accelerated
+    if (_codecParameters->codec_id == AV_CODEC_ID_H264) {
+        codec = avcodec_find_decoder_by_name("h264_omx");
+    }
+
+    // no specialized decoder, attempt automatic choice
     if (codec == nullptr) {
-        throw std::runtime_error("failed to find decoder!");
+        codec = avcodec_find_decoder(_codecParameters->codec_id);
+
+        // still nothing found
+        if (codec == nullptr) {
+            throw std::runtime_error("failed to find decoder!");
+        }
     }
 
     _codecContext = avcodec_alloc_context3(codec);
