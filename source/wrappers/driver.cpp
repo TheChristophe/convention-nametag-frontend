@@ -3,7 +3,7 @@
 #include <cstring>
 
 namespace Wrappers {
-    Driver::Driver(Mode mode, Driver::ScanDirection scanDir)
+    Driver::Driver(Mode mode)
         : _mode{ mode }
     {
         if (not Hardware::Init()) {
@@ -24,8 +24,19 @@ namespace Wrappers {
         Reset();
         InitRegistry();
 
-        //Set the display scan and color transfer modes
-        SetScanDirection(scanDir);
+        if (_mode == Mode::SSD1322) {
+            _state.width  = SSD1322::Width;
+            _state.height = SSD1322::Height;
+        }
+        else if (_mode == Mode::SH1106) {
+            _state.width  = SH1106::Width;
+            _state.height = SH1106::Height;
+        }
+        else if (_mode == Mode::SSD1305) {
+            _state.width  = SSD1305::Width;
+            _state.height = SSD1305::Height;
+        }
+
         Hardware::DelayMS(200);
 
         Clear();
@@ -48,45 +59,6 @@ namespace Wrappers {
         }
 
         Hardware::Exit();
-    }
-
-    void Driver::SetScanDirection(ScanDirection scanDir)
-    {
-        _state.scanDir = scanDir;
-
-        if (_mode == Mode::SSD1322) {
-            if (scanDir == ScanDirection::LeftRight_UpDown || scanDir == ScanDirection::LeftRight_DownUp
-                || scanDir == ScanDirection::RightLeft_UpDown || scanDir == ScanDirection::RightLeft_DownUp) {
-                _state.width  = SSD1322::Width;
-                _state.height = SSD1322::Height;
-            }
-            else {
-                _state.width  = SSD1322::Height;
-                _state.height = SSD1322::Width;
-            }
-        }
-        else if (_mode == Mode::SH1106) {
-            if (scanDir == ScanDirection::LeftRight_UpDown || scanDir == ScanDirection::LeftRight_DownUp
-                || scanDir == ScanDirection::RightLeft_UpDown || scanDir == ScanDirection::RightLeft_DownUp) {
-                _state.width  = SH1106::Width;
-                _state.height = SH1106::Height;
-            }
-            else {
-                _state.width  = SH1106::Height;
-                _state.height = SH1106::Width;
-            }
-        }
-        else if (_mode == Mode::SSD1305) {
-            if (scanDir == ScanDirection::LeftRight_UpDown || scanDir == ScanDirection::LeftRight_DownUp
-                || scanDir == ScanDirection::RightLeft_UpDown || scanDir == ScanDirection::RightLeft_DownUp) {
-                _state.width  = SSD1305::Width;
-                _state.height = SSD1305::Height;
-            }
-            else {
-                _state.width  = SSD1305::Height;
-                _state.height = SSD1305::Width;
-            }
-        }
     }
 
     void Driver::SetCursor(uint8_t x, uint8_t y)

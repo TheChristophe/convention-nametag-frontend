@@ -377,20 +377,6 @@ namespace Wrappers {
         public:
         using ColorT = uint16_t;
 
-        enum class ScanDirection {
-            LeftRight_UpDown = 0,
-            LeftRight_DownUp,
-            RightLeft_UpDown,
-            RightLeft_DownUp,
-
-            UpDown_LeftRight,
-            UpDown_RightLeft,
-            DownUp_LeftRight,
-            DownUp_RightLeft,
-
-            Default = LeftRight_UpDown
-        };
-
         struct Pins {
             enum PinIndices : int {
                 KeyUpPin    = 6,
@@ -414,9 +400,8 @@ namespace Wrappers {
             SSD1322
         };
 
-        explicit Driver(Mode mode, ScanDirection scanDir = ScanDirection::Default);
+        explicit Driver(Mode mode);
         ~Driver();
-        void SetScanDirection(ScanDirection scanDir);
 
         void SetCursor(uint8_t x, uint8_t y);
         void SetColor(uint8_t x, uint8_t y, ColorT color);
@@ -452,7 +437,6 @@ namespace Wrappers {
         struct {
             int width{};
             int height{};
-            ScanDirection scanDir{ ScanDirection::Default };
         } _state;
 
         Mode _mode{ Mode::SSD1322 };
