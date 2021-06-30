@@ -22,7 +22,7 @@ class VideoPlayer : public Player {
 
     private:
     AVFormatContext *_formatContext{};
-    int _codecIndex;
+    int _streamIndex;
     AVCodecParameters *_codecParameters;
     AVCodecContext *_codecContext;
     struct SwsContext *_swsContext;

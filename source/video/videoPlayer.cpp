@@ -17,7 +17,7 @@ VideoPlayer::VideoPlayer(const char *filename, int width, int height)
     for (int i = 0; i < static_cast<int>(_formatContext->nb_streams); i++) {
         if (_formatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
             _videoStream     = _formatContext->streams[i];
-            _codecIndex      = i;
+            _streamIndex     = i;
             _codecParameters = _videoStream->codecpar;
 
             /*
@@ -88,7 +88,7 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
             std::cerr << "Error or EOF when reading frame (" << ret << ")" << std::endl;
             std::exit(-1);
         }
-        if (packet.stream_index == _codecIndex) {
+        if (packet.stream_index == _streamIndex) {
             ret = avcodec_send_packet(_codecContext, &packet);
             if (ret < 0) {
                 if (ret == AVERROR(EAGAIN)) {
