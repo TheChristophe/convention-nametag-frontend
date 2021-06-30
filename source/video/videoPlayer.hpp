@@ -21,6 +21,8 @@ class VideoPlayer : public Player {
     void GetFrame(uint8_t *buffer, size_t bufferSize) override;
 
     private:
+    void Replay();
+
     AVFormatContext *_formatContext{};
     int _streamIndex;
     AVCodecParameters *_codecParameters;

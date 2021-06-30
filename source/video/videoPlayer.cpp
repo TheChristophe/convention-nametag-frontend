@@ -86,7 +86,9 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
         int ret = av_read_frame(_formatContext, &packet);
         if (ret < 0) {
             std::cerr << "Error or EOF when reading frame (" << ret << ")" << std::endl;
-            std::exit(-1);
+            Replay();
+            continue;
+            //std::exit(-1);
         }
         if (packet.stream_index == _streamIndex) {
             ret = avcodec_send_packet(_codecContext, &packet);
@@ -130,7 +132,8 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
 
                 // wait until the right moment
                 // TODO: wait elsewhere
-                std::this_thread::sleep_until(_startTime + std::chrono::milliseconds(static_cast<int>(frame->best_effort_timestamp * av_q2d(_videoStream->time_base) * 1000.)));
+                auto nextFrameTime = frame->best_effort_timestamp * av_q2d(_videoStream->time_base) * 1000.;
+                std::this_thread::sleep_until(_startTime + std::chrono::milliseconds(static_cast<int>(nextFrameTime)));
 
                 // TODO: should be able to play h264 back without converting to rgb since we only need luminance
                 sws_scale(_swsContext, frame->data, frame->linesize, 0, _codecContext->height, _rgbFrameBuffer->data, _rgbFrameBuffer->linesize);
@@ -142,4 +145,11 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
             }
         }
     }
+}
+
+void VideoPlayer::Replay()
+{
+    av_seek_frame(_formatContext, _streamIndex, 0, AVSEEK_FLAG_BACKWARD);
+    avcodec_flush_buffers(_codecContext);
+    _startTime = std::chrono::steady_clock::now();
 }
