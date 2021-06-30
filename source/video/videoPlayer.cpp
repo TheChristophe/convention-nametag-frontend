@@ -128,15 +128,16 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
                   std::cout << "      best effort: " << frame->best_effort_timestamp << std::endl;
                  */
 
+                // wait until the right moment
+                // TODO: wait elsewhere
+                std::this_thread::sleep_until(_startTime + std::chrono::milliseconds(static_cast<int>(frame->best_effort_timestamp * av_q2d(_videoStream->time_base) * 1000.)));
+
                 // TODO: should be able to play h264 back without converting to rgb since we only need luminance
                 sws_scale(_swsContext, frame->data, frame->linesize, 0, _codecContext->height, _rgbFrameBuffer->data, _rgbFrameBuffer->linesize);
                 memcpy(outBuffer, _rgbFrameBuffer->data[0], bufferSize);
                 av_frame_unref(frame);
                 av_packet_unref(&packet);
 
-                // wait until the right moment
-                // TODO: wait elsewhere
-                std::this_thread::sleep_until(_startTime + std::chrono::milliseconds(static_cast<int>(frame->best_effort_timestamp * av_q2d(_videoStream->time_base) * 1000.)));
                 return;
             }
         }
