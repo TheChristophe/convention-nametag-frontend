@@ -25,6 +25,8 @@ class VideoPlayer : public Player {
     AVCodecContext *_codecContext;
     struct SwsContext *_swsContext;
 
+    AVFrame *_rgbFrameBuffer{ av_frame_alloc() };
+
     const int _outWidth;
     const int _outHeight;
 };
