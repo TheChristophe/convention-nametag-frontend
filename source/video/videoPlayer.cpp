@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <thread>
 
 VideoPlayer::VideoPlayer(const char *filename, int width, int height)
     : _outWidth{ width }
@@ -15,8 +16,15 @@ VideoPlayer::VideoPlayer(const char *filename, int width, int height)
 
     for (int i = 0; i < static_cast<int>(_formatContext->nb_streams); i++) {
         if (_formatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+            _videoStream     = _formatContext->streams[i];
             _codecIndex      = i;
-            _codecParameters = _formatContext->streams[i]->codecpar;
+            _codecParameters = _videoStream->codecpar;
+
+            /*
+              std::cout << "fps " << av_q2d(_formatContext->streams[i]->avg_frame_rate) << std::endl;
+              std::cout << "tbr " << av_q2d(_formatContext->streams[i]->r_frame_rate) << std::endl;
+              std::cout << "tbn " << av_q2d(_formatContext->streams[i]->time_base) << std::endl;
+             */
         }
     }
     if (_codecParameters == nullptr) {
@@ -52,6 +60,8 @@ VideoPlayer::VideoPlayer(const char *filename, int width, int height)
         SWS_BILINEAR, nullptr, nullptr, nullptr);
 
     av_image_alloc(_rgbFrameBuffer->data, _rgbFrameBuffer->linesize, _outWidth, _outHeight, AV_PIX_FMT_RGB24, 1);
+
+    _startTime = std::chrono::steady_clock::now();
 }
 
 VideoPlayer::~VideoPlayer()
@@ -113,11 +123,20 @@ void VideoPlayer::GetFrame(uint8_t *outBuffer, size_t bufferSize)
                     }
                     std::exit(-1);
                 }
+                /*
+                  std::cout << "frame pts: " << frame->pts << std::endl;
+                  std::cout << "      best effort: " << frame->best_effort_timestamp << std::endl;
+                 */
 
+                // TODO: should be able to play h264 back without converting to rgb since we only need luminance
                 sws_scale(_swsContext, frame->data, frame->linesize, 0, _codecContext->height, _rgbFrameBuffer->data, _rgbFrameBuffer->linesize);
                 memcpy(outBuffer, _rgbFrameBuffer->data[0], bufferSize);
                 av_frame_unref(frame);
                 av_packet_unref(&packet);
+
+                // wait until the right moment
+                // TODO: wait elsewhere
+                std::this_thread::sleep_until(_startTime + std::chrono::milliseconds(static_cast<int>(frame->best_effort_timestamp * av_q2d(_videoStream->time_base) * 1000.)));
                 return;
             }
         }

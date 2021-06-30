@@ -11,6 +11,8 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 
+#include <chrono>
+
 class VideoPlayer : public Player {
     public:
     explicit VideoPlayer(const char *filename, int width, int height);
@@ -19,16 +21,19 @@ class VideoPlayer : public Player {
     void GetFrame(uint8_t *buffer, size_t bufferSize) override;
 
     private:
-    AVFormatContext *_formatContext;
+    AVFormatContext *_formatContext{};
     int _codecIndex;
     AVCodecParameters *_codecParameters;
     AVCodecContext *_codecContext;
     struct SwsContext *_swsContext;
+    AVStream *_videoStream;
 
     AVFrame *_rgbFrameBuffer{ av_frame_alloc() };
 
     const int _outWidth;
     const int _outHeight;
+
+    std::chrono::time_point<std::chrono::steady_clock> _startTime;
 };
 
 #endif
