@@ -25,7 +25,7 @@ set(SOURCE_FILES
         source/net/server.hpp
         source/util/time.cpp
         source/util/time.hpp
-        source/wrappers/driver.cpp
+        source/wrappers/driver.tpp
         source/wrappers/driver.hpp
         source/wrappers/hardware.cpp
         source/wrappers/hardware.hpp
@@ -33,7 +33,10 @@ set(SOURCE_FILES
         source/video/player.hpp
         source/video/videoPlayer.cpp
         source/video/videoPlayer.hpp
-        source/video/player.cpp)
+        source/video/player.cpp
+        source/wrappers/sh1106.cpp
+        source/wrappers/ssd1322.cpp
+        source/wrappers/ssd1305.cpp)
 
 add_executable(nametag ${SOURCE_FILES})
 

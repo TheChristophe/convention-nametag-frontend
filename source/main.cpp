@@ -1,3 +1,4 @@
+#include "driver.hpp"
 #include "net/server.hpp"
 #include "util/time.hpp"
 #include "wrappers/driver.hpp"
@@ -29,10 +30,10 @@ int main(int argc, char **argv)
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
 
-    //Driver driver(Driver::Mode::SH1106_128x64);
-    Wrappers::Driver driver(Wrappers::Driver::Mode::SSD1322);
+    Wrappers::SSD1322 driver;
 
-    uint8_t glBuffer[256 * 64 * 3];
+    // rgb buffer
+    uint8_t glBuffer[HardwareSpecs::SSD1322::Size * 3];
 
     int frameCount{};
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
         server.Run();
     });
 
-    VideoPlayer player(argv[1], 256, 64);
+    VideoPlayer player(argv[1], HardwareSpecs::SSD1322::Width, HardwareSpecs::SSD1322::Height);
 
     while (run) {
         now = static_cast<float>(static_cast<double>(util::timing::Get() - startTime) / static_cast<double>(util::timing::Frequency()));
