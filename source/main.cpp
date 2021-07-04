@@ -7,6 +7,7 @@
 #include <thread>
 
 #include <csignal>
+#include <video/videoDecoder.hpp>
 #include <video/videoPlayer.hpp>
 
 static bool run{ true };
@@ -47,40 +48,31 @@ int main(int argc, char **argv)
     decltype(current) sectionTimes[4];
     long long int sectionDeltas[3]{ 0, 0, 0 };
 
-    int64_t startTime{ util::timing::Get() };
-
-    float now{};
-
     WebServer server /*(animation)*/;
     std::thread serverThread([&server]() {
         server.Run();
     });
 
-    VideoPlayer player(argv[1], HardwareSpecs::SSD1322::Width, HardwareSpecs::SSD1322::Height);
+    VideoPlayer player(HardwareSpecs::SSD1322::Width, HardwareSpecs::SSD1322::Height);
+    player.PlayFile(argv[1]);
 
     while (run) {
-        now = static_cast<float>(static_cast<double>(util::timing::Get() - startTime) / static_cast<double>(util::timing::Frequency()));
-
         //animation.ProcessRequests();
 
         sectionTimes[0] = std::chrono::steady_clock::now();
 
-        // section 1: openGL operations
-        //glWrapper.PreDraw();
-        //animation.Draw(now);
-        player.GetFrame(glBuffer, sizeof(glBuffer));
+        // section 1: video decode
+        player.FetchFrame(glBuffer, sizeof(glBuffer));
 
         sectionTimes[1] = std::chrono::steady_clock::now();
 
         // section 2: output buffer conversion and transfer
         // expected to be constant
-        //glWrapper.PostDraw(glBuffer);
-        driver.CopyGLBuffer(glBuffer);
+        driver.CopyFramebuffer(glBuffer);
 
         sectionTimes[2] = std::chrono::steady_clock::now();
 
         // section 3: clear buffer, wipe screen
-        // expected to be constant
         driver.Display();
         driver.Clear();
 
@@ -88,7 +80,6 @@ int main(int argc, char **argv)
 
         current = std::chrono::steady_clock::now();
 
-        //printf("Frametime: %llims\n", delta.count());
         totalFrameTimes += std::chrono::duration_cast<std::chrono::milliseconds>(current - prev).count();
         for (int i = 0; i < 3; i++) {
             auto timeDifference{ std::chrono::duration_cast<std::chrono::microseconds>(sectionTimes[i + 1] - sectionTimes[i]).count() };

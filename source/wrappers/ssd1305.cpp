@@ -30,7 +30,7 @@ namespace Wrappers {
         }
     }
 
-    void SSD1305::CopyGLBuffer(const uint8_t *glBuffer)
+    void SSD1305::CopyFramebuffer(const uint8_t *glBuffer)
     {
         for (int page{ 0 }; page < 8; page++) {
             for (int x{ 0 }; x < _width; x++) {

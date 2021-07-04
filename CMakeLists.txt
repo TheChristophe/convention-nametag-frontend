@@ -30,13 +30,16 @@ set(SOURCE_FILES
         source/wrappers/hardware.cpp
         source/wrappers/hardware.hpp
         source/main.cpp
-        source/video/player.hpp
-        source/video/videoPlayer.cpp
-        source/video/videoPlayer.hpp
-        source/video/player.cpp
+        source/video/decoder.hpp
+        source/video/videoDecoder.cpp
+        source/video/videoDecoder.hpp
         source/wrappers/sh1106.cpp
         source/wrappers/ssd1322.cpp
-        source/wrappers/ssd1305.cpp)
+        source/wrappers/ssd1305.cpp
+        source/video/videoPlayer.cpp
+        source/video/videoPlayer.hpp
+        source/video/idleDecoder.cpp
+        source/video/idleDecoder.hpp)
 
 add_executable(nametag ${SOURCE_FILES})
 

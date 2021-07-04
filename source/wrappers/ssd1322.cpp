@@ -30,7 +30,7 @@ namespace Wrappers {
         Hardware::DelayMS(0);
     }
 
-    void SSD1322::CopyGLBuffer(const uint8_t *glBuffer)
+    void SSD1322::CopyFramebuffer(const uint8_t *glBuffer)
     {
         // gl buffer is formatted in RGB, so multiply index by 3 to use R channels
         for (unsigned y{ 0 }; y < 64; y++) {

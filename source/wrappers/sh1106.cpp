@@ -39,7 +39,7 @@ namespace Wrappers {
         }
     }
 
-    void SH1106::CopyGLBuffer(const uint8_t *glBuffer)
+    void SH1106::CopyFramebuffer(const uint8_t *glBuffer)
     {
         // gl buffer is formatted in RGB, so multiply index by 3 to use R channels
 

@@ -1,41 +1,24 @@
 #ifndef CONVENTION_NAMETAG_VIDEOPLAYER_HPP
 #define CONVENTION_NAMETAG_VIDEOPLAYER_HPP
 
-#include "player.hpp"
+#include "decoder.hpp"
+#include "idleDecoder.hpp"
 
-// extern C required
-extern "C" {
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libavutil/imgutils.h>
-#include <libswscale/swscale.h>
-}
+#include <memory>
 
-#include <chrono>
-
-class VideoPlayer : public Player {
+class VideoPlayer {
     public:
-    explicit VideoPlayer(const char *filename, int width, int height);
-    ~VideoPlayer() override;
+    VideoPlayer(int width, int height);
+    ~VideoPlayer() = default;
 
-    void GetFrame(uint8_t *buffer, size_t bufferSize) override;
+    void FetchFrame(uint8_t *buffer, int bufferSize);
+    void PlayFile(const std::string &filename);
 
     private:
-    void Replay();
+    std::unique_ptr<Decoder> _activeDecoder{ std::make_unique<IdleDecoder>() };
 
-    AVFormatContext *_formatContext{};
-    int _streamIndex;
-    AVCodecParameters *_codecParameters;
-    AVCodecContext *_codecContext;
-    struct SwsContext *_swsContext;
-    AVStream *_videoStream;
-
-    AVFrame *_rgbFrameBuffer{ av_frame_alloc() };
-
-    const int _outWidth;
-    const int _outHeight;
-
-    std::chrono::time_point<std::chrono::steady_clock> _startTime;
+    int _width;
+    int _height;
 };
 
-#endif
+#endif //CONVENTION_NAMETAG_VIDEOPLAYER_HPP

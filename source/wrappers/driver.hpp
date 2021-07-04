@@ -401,7 +401,7 @@ namespace Wrappers {
         virtual void Display(){};
         void SetPanelPower(bool on = true);
 
-        virtual void CopyGLBuffer(const uint8_t *glBuffer) = 0;
+        virtual void CopyFramebuffer(const uint8_t *glBuffer) = 0;
 
         [[nodiscard]] int GetWidth() const;
         [[nodiscard]] int GetHeight() const;
@@ -438,7 +438,7 @@ namespace Wrappers {
 
         SH1106();
         void Display() override;
-        void CopyGLBuffer(const uint8_t *glBuffer) override;
+        void CopyFramebuffer(const uint8_t *glBuffer) override;
 
         uint8_t GetKeyUp();
         uint8_t GetKeyDown();
@@ -458,7 +458,7 @@ namespace Wrappers {
         SSD1322();
 
         void Display() override;
-        void CopyGLBuffer(const uint8_t *glBuffer) override;
+        void CopyFramebuffer(const uint8_t *glBuffer) override;
 
         private:
         void InitRegistry();
@@ -469,7 +469,7 @@ namespace Wrappers {
         SSD1305();
 
         void Display() override;
-        void CopyGLBuffer(const uint8_t *glBuffer) override;
+        void CopyFramebuffer(const uint8_t *glBuffer) override;
 
         private:
         void InitRegistry();
