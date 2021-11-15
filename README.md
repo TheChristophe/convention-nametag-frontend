@@ -6,9 +6,10 @@ use is pinning it to a shirt or hanging it around your neck and uploading files 
 #### Current state
 
 - Recycled old gl nametag code
-- Proof of concept done
+- Proof of concept done:
 
-https://red-panda.io/static/nametag-poc.mp4
+https://user-images.githubusercontent.com/65168240/141864525-b1e3a986-ae35-4b9f-8bda-cf15c19f3d5e.mp4
+
 
 TODO:
 
