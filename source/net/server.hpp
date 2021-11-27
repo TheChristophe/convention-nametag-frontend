@@ -10,7 +10,7 @@
 class WebServer {
     public:
     explicit WebServer() = default;
-    ~WebServer() = default;
+    ~WebServer()         = default;
 
     void run();
     void halt();
