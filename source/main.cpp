@@ -1,12 +1,10 @@
 #include "driver.hpp"
 #include "net/server.hpp"
-#include "wrappers/driver.hpp"
 
 #include <chrono>
 #include <thread>
 
 #include <csignal>
-#include <video/videoDecoder.hpp>
 #include <video/videoPlayer.hpp>
 
 static bool run{ true };
@@ -37,7 +35,7 @@ int main(int argc, char **argv)
 
     int frameCount{};
 
-    //AnimationController animation(driver.GetWidth(), driver.GetHeight());
+    // AnimationController animation(driver.GetWidth(), driver.GetHeight());
 
     auto current = std::chrono::steady_clock::now();
     auto prev    = std::chrono::steady_clock::now();
@@ -56,7 +54,7 @@ int main(int argc, char **argv)
     player.PlayFile(argv[1]);
 
     while (run) {
-        //animation.ProcessRequests();
+        // animation.ProcessRequests();
 
         sectionTimes[0] = std::chrono::steady_clock::now();
 
