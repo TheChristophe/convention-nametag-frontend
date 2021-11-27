@@ -20,8 +20,12 @@ const existing: VideoMetadata[] = [
     },
 ];
 
+type Videos = {
+    videos: VideoMetadata[];
+};
+
 function App() {
-    const existingVideos: VideoMetadata[] = existing;
+    const existingVideos: Videos = { videos: existing };
 
     return (
         <ThemeProvider theme={theme}>
@@ -29,7 +33,7 @@ function App() {
                 <VideoUpload />
                 <hr style={{ border: 0, height: '1px', background: '#CCC' }} />
                 <Stack spacing={2}>
-                    {existingVideos.map((video) => (
+                    {existingVideos.videos.map((video) => (
                         <VideoEntry key={video.filename} metadata={video} />
                     ))}
                 </Stack>

@@ -1,5 +1,5 @@
 export type VideoMetadata = {
-    thumbnailUrl: string;
+    thumbnailUrl?: string;
     filename: string;
-    duration: string;
+    duration?: string;
 };
