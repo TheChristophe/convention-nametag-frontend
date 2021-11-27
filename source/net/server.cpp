@@ -62,7 +62,7 @@ std::vector<std::filesystem::path> listFiles()
     if (std::filesystem::exists(videoFolder) && std::filesystem::is_directory(videoFolder)) {
         std::vector<std::filesystem::path> files;
         auto iterator = std::filesystem::directory_iterator(videoFolder);
-        std::copy(std::filesystem::begin(iterator), std::filesystem::end(iterator), files.begin());
+        std::copy(std::filesystem::begin(iterator), std::filesystem::end(iterator), std::back_inserter(files));
         return files;
     }
     return {};
@@ -87,8 +87,8 @@ void WebServer::run()
         .get("/videos", [this](uWS::HttpResponse<false> *res, uWS::HttpRequest *req) {
             auto files = listFiles();
             std::vector<std::string> fileNames;
-            std::transform(files.begin(), files.end(), fileNames.begin(), [](const std::filesystem::path &path) {
-                return path.filename();
+            std::transform(files.begin(), files.end(), std::back_inserter(fileNames), [](const std::filesystem::path &path) {
+                return std::string(path.filename());
             });
             auto json = nlohmann::json({ { "videos", fileNames } });
 
