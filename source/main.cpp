@@ -20,11 +20,6 @@ void signalHandler(int dummy)
 
 int main(int argc, char **argv)
 {
-    if (argc < 2) {
-        printf("missing args");
-        return 0;
-    }
-
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
 
@@ -45,13 +40,12 @@ int main(int argc, char **argv)
     decltype(current) sectionTimes[4];
     long long int sectionDeltas[3]{ 0, 0, 0 };
 
-    WebServer server;
-    std::thread serverThread([&server]() {
-        server.run();
-    });
-
     VideoPlayer player(HardwareSpecs::SSD1322::Width, HardwareSpecs::SSD1322::Height);
-    player.PlayFile(argv[1]);
+
+    WebServer server;
+    std::thread serverThread([&server, &player]() {
+        server.run(player);
+    });
 
     while (run) {
         // animation.ProcessRequests();

@@ -12,11 +12,12 @@ extern "C" {
 }
 
 #include <chrono>
+#include <filesystem>
 #include <string>
 
 class VideoDecoder : public Decoder {
     public:
-    explicit VideoDecoder(const std::string &filename, int width, int height);
+    explicit VideoDecoder(const std::filesystem::path &file, int width, int height);
     ~VideoDecoder() override;
 
     void DecodeFrame(uint8_t *outBuffer, int bufferSize) override;

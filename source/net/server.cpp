@@ -68,7 +68,7 @@ std::vector<std::filesystem::path> listFiles()
     return {};
 }
 
-void WebServer::run()
+void WebServer::run(VideoPlayer &player)
 {
     uWS::App()
         .get("/", [this](uWS::HttpResponse<false> *res, uWS::HttpRequest *req) {
@@ -106,10 +106,20 @@ void WebServer::run()
             res->end("");
         })
         // play specific video
-        .post("/videos/*:play", [this](uWS::HttpResponse<false> *res, uWS::HttpRequest *req) {
+        .post("/videos/*:play", [this, &player](uWS::HttpResponse<false> *res, uWS::HttpRequest *req) {
+            auto url = req->getUrl();
+            // trim ":play"
+            auto path = videoFolder / std::filesystem::path(url.substr(0, url.size() - 5)).filename();
+            if (not player.PlayFile(path)) {
+                res->writeHeader("content-type", "text/html");
+                res->writeStatus(ResponseCodes::HTTP_404_NOT_FOUND);
+                res->end(RESPONSE_404);
+                return;
+            }
+
             res->writeHeader("content-type", "application/json");
             res->writeStatus(ResponseCodes::HTTP_200_OK);
-            res->end("TODO");
+            res->end("");
         })
         .listen(_port, [this](auto *token) {
             this->_socket = token;

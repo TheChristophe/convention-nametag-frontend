@@ -5,10 +5,11 @@
 #include <stdexcept>
 #include <thread>
 
-VideoDecoder::VideoDecoder(const std::string &filename, int width, int height)
+VideoDecoder::VideoDecoder(const std::filesystem::path &file, int width, int height)
     : _outWidth{ width }
     , _outHeight{ height }
 {
+    auto filename = std::string(file);
     if (avformat_open_input(&_formatContext, filename.c_str(), nullptr, nullptr) != 0) {
         throw std::runtime_error("failed to open video file!");
     }
@@ -63,7 +64,7 @@ VideoDecoder::~VideoDecoder()
 {
     av_freep(&_rgbFrameBuffer->data[0]);
     av_frame_unref(_rgbFrameBuffer);
-    //avcodec_close(_codecContext);
+    // avcodec_close(_codecContext);
     avformat_close_input(&_formatContext);
 }
 

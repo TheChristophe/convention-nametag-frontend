@@ -4,7 +4,9 @@
 #include "decoder.hpp"
 #include "idleDecoder.hpp"
 
+#include <filesystem>
 #include <memory>
+#include <mutex>
 
 class VideoPlayer {
     public:
@@ -12,13 +14,15 @@ class VideoPlayer {
     ~VideoPlayer() = default;
 
     void FetchFrame(uint8_t *buffer, int bufferSize);
-    void PlayFile(const std::string &filename);
+    bool PlayFile(const std::filesystem::path &file);
 
     private:
     std::unique_ptr<Decoder> _activeDecoder{ std::make_unique<IdleDecoder>() };
 
     int _width;
     int _height;
+
+    std::mutex _decoderAccess;
 };
 
-#endif //CONVENTION_NAMETAG_VIDEOPLAYER_HPP
+#endif // CONVENTION_NAMETAG_VIDEOPLAYER_HPP

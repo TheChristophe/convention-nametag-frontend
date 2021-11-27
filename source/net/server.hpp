@@ -1,6 +1,8 @@
 #ifndef CONVENTION_NAMETAG_SERVER_HPP
 #define CONVENTION_NAMETAG_SERVER_HPP
 
+#include "video/videoPlayer.hpp"
+
 #include <App.h>
 #include <libusockets.h>
 #include <nlohmann/json.hpp>
@@ -12,7 +14,7 @@ class WebServer {
     explicit WebServer() = default;
     ~WebServer()         = default;
 
-    void run();
+    void run(VideoPlayer &player);
     void halt();
 
     private:
