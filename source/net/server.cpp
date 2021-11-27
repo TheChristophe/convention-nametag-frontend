@@ -86,9 +86,9 @@ void WebServer::run(VideoPlayer &player)
         // get list of videos
         .get("/videos", [this](uWS::HttpResponse<false> *res, uWS::HttpRequest *req) {
             auto files = listFiles();
-            std::vector<std::string> fileNames;
-            std::transform(files.begin(), files.end(), std::back_inserter(fileNames), [](const std::filesystem::path &path) {
-                return std::string(path.filename());
+            std::vector<nlohmann::json> fileNames;
+            std::transform(files.begin(), files.end(), std::back_inserter(fileNames), [](const std::filesystem::path &path) -> nlohmann::json {
+                return { { "filename", std::string(path.filename()) } };
             });
             auto json = nlohmann::json({ { "videos", fileNames } });
 
