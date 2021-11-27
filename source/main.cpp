@@ -1,6 +1,5 @@
 #include "driver.hpp"
 #include "net/server.hpp"
-#include "util/time.hpp"
 #include "wrappers/driver.hpp"
 
 #include <chrono>
