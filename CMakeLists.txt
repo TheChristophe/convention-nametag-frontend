@@ -7,7 +7,8 @@ include(CheckIncludeFileCXX)
 
 include_directories(SYSTEM ${CMAKE_SYSROOT}/usr/include/freetype2)
 include_directories(SYSTEM include)
-include_directories(SYSTEM include/nlohmann/detail)
+include_directories(SYSTEM include/cpptoml/include)
+include_directories(SYSTEM include/json/include)
 include_directories(SYSTEM include/uWebSockets/src)
 include_directories(SYSTEM include/uWebSockets/uSockets/src)
 include_directories(source)
@@ -17,7 +18,7 @@ include_directories(source/util)
 include_directories(source/wrappers)
 
 set(CMAKE_CXX_FLAGS "-pipe -Winvalid-pch -fexceptions -Wno-psabi -pthread")
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -ggdb -Wall -Wextra -Wformat -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual  -Wno-unused-parameter -Wfatal-errors -DDEBUGGING -Wsuggest-final-types -Wpedantic -Wnull-dereference -fno-omit-frame-pointer -fdiagnostics-color -ftemplate-depth=64 -fconstexpr-depth=64 -ftemplate-backtrace-limit=8 -Wreorder -Wold-style-cast -Woverloaded-virtual")
+set(CMAKE_CXX_FLAGS_DEBUG "-Og -ggdb -Wall -Wextra -Wformat -Wfloat-equal -Wshadow -Wpointer-arith -Wcast-qual  -Wno-unused-parameter -Wfatal-errors -DDEBUGGING -Wsuggest-final-types -Wpedantic -Wnull-dereference -fno-omit-frame-pointer -fdiagnostics-color -ftemplate-depth=128 -fconstexpr-depth=128 -ftemplate-backtrace-limit=8 -Wreorder -Wold-style-cast -Woverloaded-virtual")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard")
 
 set(SOURCE_FILES

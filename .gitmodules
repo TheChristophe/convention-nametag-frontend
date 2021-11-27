@@ -1,3 +1,11 @@
 [submodule "uWebSockets"]
 	path = include/uWebSockets
 	url = git@github.com:uNetworking/uWebSockets.git
+
+[submodule "json"]
+	path = include/json
+	url = git@github.com:nlohmann/json.git
+
+[submodule "cpptoml"]
+	path = include/cpptoml
+	url = git@github.com:skystrife/cpptoml.git
