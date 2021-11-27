@@ -48,9 +48,9 @@ int main(int argc, char **argv)
     decltype(current) sectionTimes[4];
     long long int sectionDeltas[3]{ 0, 0, 0 };
 
-    WebServer server /*(animation)*/;
+    WebServer server;
     std::thread serverThread([&server]() {
-        server.Run();
+        server.run();
     });
 
     VideoPlayer player(HardwareSpecs::SSD1322::Width, HardwareSpecs::SSD1322::Height);
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
         std::swap(current, prev);
     }
 
-    server.Halt();
+    server.halt();
     serverThread.join();
 
     printf("Avarage timing:\n");
