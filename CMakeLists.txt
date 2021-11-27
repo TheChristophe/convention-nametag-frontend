@@ -24,7 +24,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mtune=arm1176jzf-s -mfpu=vfp -mf
 set(SOURCE_FILES
         source/net/server.cpp
         source/net/server.hpp
-        source/wrappers/driver.tpp
         source/wrappers/driver.hpp
         source/wrappers/hardware.cpp
         source/wrappers/hardware.hpp
