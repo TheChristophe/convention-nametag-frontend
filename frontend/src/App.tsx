@@ -4,6 +4,7 @@ import './actionable.css';
 import { VideoUpload } from './VideoUpload';
 import { VideoMetadata } from './VideoMetadata';
 import { VideoEntry } from './VideoEntry';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 
 const theme = createTheme();
 
@@ -24,8 +25,17 @@ type Videos = {
     videos: VideoMetadata[];
 };
 
-function App() {
-    const existingVideos: Videos = { videos: existing };
+const queryClient = new QueryClient();
+
+function AppContent() {
+    const existingVideos = useQuery('videos', () =>
+        fetch('/videos').then((res): Promise<Videos> => {
+            if (!res.ok) {
+                throw new Error(res.statusText);
+            }
+            return res.json();
+        })
+    );
 
     return (
         <ThemeProvider theme={theme}>
@@ -33,12 +43,20 @@ function App() {
                 <VideoUpload />
                 <hr style={{ border: 0, height: '1px', background: '#CCC' }} />
                 <Stack spacing={2}>
-                    {existingVideos.videos.map((video) => (
+                    {existingVideos.data?.videos.map((video) => (
                         <VideoEntry key={video.filename} metadata={video} />
                     ))}
                 </Stack>
             </Container>
         </ThemeProvider>
+    );
+}
+
+function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <AppContent />
+        </QueryClientProvider>
     );
 }
 
