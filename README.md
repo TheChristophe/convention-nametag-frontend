@@ -1,48 +1,46 @@
-## Small nametag using Pi Zero W and various OLED panels
+# Getting Started with Create React App
 
-Work-in-progress self-programmed convetion nametag using a Raspberry Pi Zero W and a SSD1322 OLED panel. The intended
-use is pinning it to a shirt or hanging it around your neck and uploading files using your phone.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-#### Current state
+## Available Scripts
 
-- Recycled old gl nametag code
-- Proof of concept done:
+In the project directory, you can run:
 
-https://user-images.githubusercontent.com/65168240/141864525-b1e3a986-ae35-4b9f-8bda-cf15c19f3d5e.mp4
+### `npm start`
 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-TODO:
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-- Playlist functionality
-- Frontend application / website interface (using React)
+### `npm test`
 
-### OLED Panels
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Panels tried during development:
+### `npm run build`
 
-- [SH1106 HAT](https://www.waveshare.com/1.3inch-oled-hat.htm)
-- [SSD1305 HAT](https://www.waveshare.com/2.23inch-oled-hat.htm)
-- Soldered SSD1322
-  using [this guide](https://www.balena.io/blog/build-a-raspberry-pi-powered-train-station-oled-sign-for-your-desk/)
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Frontend
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-TODO
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Backend
+### `npm run eject`
 
-- Set up cross-compilation
-    - I refer you to [crosstool-ng](https://github.com/crosstool-ng/crosstool-ng) and wish you the best of luck
-        - Pick [this](https://github.com/crosstool-ng/crosstool-ng/tree/master/samples/armv6-unknown-linux-gnueabihf)
-          or [this](https://github.com/crosstool-ng/crosstool-ng/tree/master/samples/armv6-unknown-linux-gnueabi) config
-- Build with cmake using provided toolchain file
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-Run with:
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-- `sudo ./nametag` (due to GPIO permissions)
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-Notes:
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-- Ensure your video is already in desired size
-    - From testing, h264 decode for 256x64 in software takes about ~5ms. 480x360 requires about 33ms
-    - In combination with 4.5ms copy time, this means <10ms, allowing for up to 100fps
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
