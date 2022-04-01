@@ -15,6 +15,7 @@ export function makeThumbnailUrl(file: File, setThumbnailUrl: (url: string) => v
             }
         };
         video.addEventListener('loadeddata', function () {
+            video.currentTime = 0.4 * video.duration;
             if (snapImage()) {
                 video.removeEventListener('timeupdate', timeupdate);
             }
@@ -25,7 +26,7 @@ export function makeThumbnailUrl(file: File, setThumbnailUrl: (url: string) => v
             canvas.height = video.videoHeight;
             canvas.getContext('2d')!.drawImage(video, 0, 0, canvas.width, canvas.height);
             let image = canvas.toDataURL();
-            let success = image.length > 100000;
+            let success = image.length > 20000;
             if (success) {
                 setThumbnailUrl(image);
                 console.log(image);
