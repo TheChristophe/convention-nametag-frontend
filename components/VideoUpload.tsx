@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { ThumbnailPaper } from './ThumbnailPaper';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Grid, Paper } from '@mui/material';
 import { makeThumbnailUrl } from './utility';
 import { useMutation } from 'react-query';
 import { HOST } from './config';
+import { Thumbnail } from './VideoEntry';
 
 const videoFormats = [
     'image/gif', // animated .gif
@@ -43,39 +43,52 @@ export function VideoUpload() {
     }
 
     return (
-        <ThumbnailPaper thumbnailUrl={thumbnailUrl}>
-            <Box sx={{ padding: '2em' }}>
-                <Button variant="contained" component="label">
-                    Select
-                    <input
-                        type="file"
-                        hidden
-                        accept={videoFormats.join(',')}
-                        onChange={(event) => {
-                            if (
-                                event.target &&
-                                event.target.files &&
-                                event.target.files.length > 0
-                            ) {
-                                const file = event.target.files[0];
-                                setFile(file);
-                                makeThumbnailUrl(file, setThumbnailUrl);
-                            }
+        <Paper elevation={4}>
+            <Grid container width="100%">
+                <Grid item xs={6} md={4}>
+                    <Thumbnail thumbnailUrl={thumbnailUrl} />
+                </Grid>
+                <Grid item xs={6} md={8}>
+                    <div
+                        style={{
+                            position: 'relative',
                         }}
-                    />
-                </Button>{' '}
-                {file?.name}{' '}
-                {file && (
-                    <Button
-                        variant="contained"
-                        component="label"
-                        onClick={upload}
-                        disabled={mutation.isLoading}
                     >
-                        Submit
-                    </Button>
-                )}
-            </Box>
-        </ThumbnailPaper>
+                        <Box sx={{ padding: '2em' }}>
+                            <Button variant="contained" component="label">
+                                Select
+                                <input
+                                    type="file"
+                                    hidden
+                                    accept={videoFormats.join(',')}
+                                    onChange={(event) => {
+                                        if (
+                                            event.target &&
+                                            event.target.files &&
+                                            event.target.files.length > 0
+                                        ) {
+                                            const file = event.target.files[0];
+                                            setFile(file);
+                                            makeThumbnailUrl(file, setThumbnailUrl);
+                                        }
+                                    }}
+                                />
+                            </Button>{' '}
+                            {file?.name}{' '}
+                            {file && (
+                                <Button
+                                    variant="contained"
+                                    component="label"
+                                    onClick={upload}
+                                    disabled={mutation.isLoading}
+                                >
+                                    Submit
+                                </Button>
+                            )}
+                        </Box>
+                    </div>
+                </Grid>
+            </Grid>
+        </Paper>
     );
 }
