@@ -75,17 +75,17 @@ export function VideoUpload({ reload }: { reload: () => void }) {
                                     }}
                                 />
                             </Button>{' '}
-                            {file?.name}{' '}
-                            {file && (
-                                <Button
-                                    variant="contained"
-                                    component="label"
-                                    onClick={upload}
-                                    disabled={mutation.isLoading}
-                                >
-                                    Submit
-                                </Button>
-                            )}
+                            <Button
+                                variant="contained"
+                                component="label"
+                                onClick={upload}
+                                disabled={file === undefined || mutation.isLoading}
+                            >
+                                Submit
+                            </Button>
+                            <br />
+                            {file?.name}
+                            <br />
                         </Box>
                     </div>
                 </Grid>
