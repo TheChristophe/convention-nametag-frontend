@@ -26,11 +26,15 @@ const Home: NextPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <Container maxWidth="sm" sx={{ my: '2em' }}>
-                <VideoUpload />
+                <VideoUpload reload={() => existingVideos.refetch()} />
                 <hr style={{ border: 0, height: '1px', background: '#CCC' }} />
                 <Stack spacing={2}>
                     {existingVideos.data?.videos.map((video) => (
-                        <VideoEntry key={video.filename} metadata={video} />
+                        <VideoEntry
+                            key={video.filename}
+                            metadata={video}
+                            reload={() => existingVideos.refetch()}
+                        />
                     ))}
                 </Stack>
             </Container>

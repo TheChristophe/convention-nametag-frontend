@@ -19,7 +19,7 @@ export function Thumbnail({ thumbnailUrl }: { thumbnailUrl: string }) {
     );
 }
 
-export function VideoEntry(props: { metadata: VideoMetadata }) {
+export function VideoEntry(props: { metadata: VideoMetadata; reload: () => void }) {
     const rippleRef = React.useRef<TouchRippleActions>();
 
     const play = useMutation(() => {
@@ -28,11 +28,18 @@ export function VideoEntry(props: { metadata: VideoMetadata }) {
         });
     });
 
-    const delete_ = useMutation(() => {
-        return fetch(HOST + '/videos/' + props.metadata.filename, {
-            method: 'DELETE',
-        });
-    });
+    const delete_ = useMutation(
+        () => {
+            return fetch(HOST + '/videos/' + props.metadata.filename, {
+                method: 'DELETE',
+            });
+        },
+        {
+            onSuccess: () => {
+                props.reload();
+            },
+        }
+    );
 
     const thumbnailUrl = props.metadata.thumbnailUrl ?? 'https://i.imgur.com/C3QGaPB.jpeg';
 

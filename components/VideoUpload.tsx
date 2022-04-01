@@ -15,7 +15,7 @@ const videoFormats = [
     'video/x-ms-wmv', // .wmv
 ];
 
-export function VideoUpload() {
+export function VideoUpload({ reload }: { reload: () => void }) {
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
     const [file, setFile] = useState<File | undefined>();
 
@@ -32,6 +32,7 @@ export function VideoUpload() {
         {
             onSuccess: () => {
                 setFile(undefined);
+                reload();
             },
         }
     );
