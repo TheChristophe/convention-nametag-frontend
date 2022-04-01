@@ -35,7 +35,7 @@ export function VideoEntry(props: { metadata: VideoMetadata }) {
                 >
                     <Box sx={{ padding: '2em' }} onClick={() => mutate()}>
                         {/*<TouchRipple ref={rippleRef} center={false} /> */}
-                        {props.metadata.filename} ({props.metadata.duration ?? 'Duration unknown'})
+                        {props.metadata.filename} ({props.metadata.duration ?? '??:??'})
                     </Box>
                 </div>
             </ThumbnailPaper>
