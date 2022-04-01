@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ThumbnailPaper } from './ThumbnailPaper';
 import { Box, Button } from '@mui/material';
 import { makeThumbnailUrl } from './utility';
+import { useMutation } from 'react-query';
+import { HOST } from './config';
 
 const videoFormats = [
     'image/gif', // animated .gif
@@ -16,6 +18,29 @@ const videoFormats = [
 export function VideoUpload() {
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
     const [file, setFile] = useState<File | undefined>();
+
+    const mutation = useMutation(
+        (data: File) => {
+            return fetch(HOST + '/videos/' + data.name, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': data.type },
+                body: data,
+            });
+        },
+        {
+            onSuccess: () => {
+                setFile(undefined);
+            },
+        }
+    );
+
+    function upload() {
+        if (file !== undefined) {
+            mutation.mutate(file);
+        }
+    }
 
     return (
         <ThumbnailPaper thumbnailUrl={thumbnailUrl}>
@@ -41,7 +66,12 @@ export function VideoUpload() {
                 </Button>{' '}
                 {file?.name}{' '}
                 {file && (
-                    <Button variant="contained" component="label">
+                    <Button
+                        variant="contained"
+                        component="label"
+                        onClick={upload}
+                        disabled={mutation.isLoading}
+                    >
                         Submit
                     </Button>
                 )}
