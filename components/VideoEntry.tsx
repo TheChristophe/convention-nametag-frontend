@@ -4,12 +4,13 @@ import { ThumbnailPaper } from './ThumbnailPaper';
 import React from 'react';
 import TouchRipple, { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 import { useMutation } from 'react-query';
+import { HOST } from './config';
 
 export function VideoEntry(props: { metadata: VideoMetadata }) {
     const rippleRef = React.useRef<TouchRippleActions>();
 
     const { mutate } = useMutation(() => {
-        return fetch('/videos/' + props.metadata.filename + ':play', {
+        return fetch(HOST + '/videos/' + props.metadata.filename + ':play', {
             method: 'POST',
         });
     });
@@ -33,7 +34,7 @@ export function VideoEntry(props: { metadata: VideoMetadata }) {
                     }}
                 >
                     <Box sx={{ padding: '2em' }} onClick={() => mutate()}>
-                        <TouchRipple ref={rippleRef} center={false} />
+                        {/*<TouchRipple ref={rippleRef} center={false} /> */}
                         {props.metadata.filename} ({props.metadata.duration ?? 'Duration unknown'})
                     </Box>
                 </div>

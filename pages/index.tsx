@@ -1,35 +1,21 @@
 import React from 'react';
 import { Container, createTheme, Stack, ThemeProvider } from '@mui/material';
-import './actionable.css';
-import { VideoUpload } from './VideoUpload';
-import { VideoMetadata } from './VideoMetadata';
-import { VideoEntry } from './VideoEntry';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
+import type { NextPage } from 'next';
+import { VideoUpload } from '../components/VideoUpload';
+import { VideoEntry } from '../components/VideoEntry';
+import { VideoMetadata } from '../components/VideoMetadata';
+import { HOST } from '../components/config';
 
 const theme = createTheme();
-
-const existing: VideoMetadata[] = [
-    {
-        thumbnailUrl: 'https://i.imgur.com/C3QGaPB.jpeg',
-        filename: 'cats.mp4',
-        duration: '144:00:00',
-    },
-    {
-        thumbnailUrl: 'https://i.imgur.com/rpQdRoY.jpeg',
-        filename: 'dogs.mp4',
-        duration: '0:00:07',
-    },
-];
 
 type Videos = {
     videos: VideoMetadata[];
 };
 
-const queryClient = new QueryClient();
-
-function AppContent() {
+const Home: NextPage = () => {
     const existingVideos = useQuery('videos', () =>
-        fetch('/videos').then((res): Promise<Videos> => {
+        fetch(HOST + '/videos').then((res): Promise<Videos> => {
             if (!res.ok) {
                 throw new Error(res.statusText);
             }
@@ -50,14 +36,6 @@ function AppContent() {
             </Container>
         </ThemeProvider>
     );
-}
+};
 
-function App() {
-    return (
-        <QueryClientProvider client={queryClient}>
-            <AppContent />
-        </QueryClientProvider>
-    );
-}
-
-export default App;
+export default Home;
