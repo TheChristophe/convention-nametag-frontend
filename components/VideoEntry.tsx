@@ -10,7 +10,7 @@ export function VideoEntry(props: { metadata: VideoMetadata }) {
     const rippleRef = React.useRef<TouchRippleActions>();
 
     const { mutate } = useMutation(() => {
-        return fetch(HOST + '/videos/' + props.metadata.filename + ':play', {
+        return fetch(HOST + '/videos/' + props.metadata.filename + '/play', {
             method: 'POST',
         });
     });
