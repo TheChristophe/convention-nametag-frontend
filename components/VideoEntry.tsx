@@ -1,47 +1,48 @@
-import { VideoMetadata } from './VideoMetadata';
 import { Box, Grid, Paper, Slide } from '@mui/material';
-import React from 'react';
-import TouchRipple, { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { HOST } from './config';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import type VideoMetadata from 'components/VideoMetadata';
+import actionable from './actionable.module.css';
 
-export function Thumbnail({ thumbnailUrl }: { thumbnailUrl: string }) {
-    return (
-        <Box
-            sx={{
-                borderRight: '1px solid lightgray',
-                height: '100%',
-                backgroundImage: thumbnailUrl.length ? 'url(' + thumbnailUrl + ')' : undefined,
-                backgroundSize: 'cover',
-            }}
-        />
-    );
-}
+type ThumbnailProps = { thumbnailUrl: string };
+export const Thumbnail = ({ thumbnailUrl }: ThumbnailProps) => (
+    <Box
+        sx={{
+            borderRight: '1px solid lightgray',
+            height: '100%',
+            backgroundImage: thumbnailUrl.length ? 'url(' + thumbnailUrl + ')' : undefined,
+            backgroundSize: 'cover',
+        }}
+    />
+);
 
-export function VideoEntry(props: { metadata: VideoMetadata; reload: () => void }) {
-    const rippleRef = React.useRef<TouchRippleActions>();
+const humanReadableTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return minutes.toString().padStart(2, '0') + ':' + remainingSeconds.toString().padStart(2, '0');
+};
 
-    const play = useMutation(() => {
-        return fetch(HOST + '/videos/' + props.metadata.filename + '/play', {
-            method: 'POST',
-        });
+type VideoEntryProps = { metadata: VideoMetadata; reload: () => void };
+const VideoEntry = ({ metadata, reload }: VideoEntryProps) => {
+    const play = useMutation({
+        mutationFn: () =>
+            fetch(HOST + '/videos/' + metadata.filename + '/play', {
+                method: 'POST',
+            }),
     });
 
-    const delete_ = useMutation(
-        () => {
-            return fetch(HOST + '/videos/' + props.metadata.filename, {
+    const delete_ = useMutation({
+        mutationFn: () =>
+            fetch(HOST + '/videos/' + metadata.filename, {
                 method: 'DELETE',
-            });
+            }),
+        onSuccess: () => {
+            reload();
         },
-        {
-            onSuccess: () => {
-                props.reload();
-            },
-        }
-    );
+    });
 
-    const thumbnailUrl = props.metadata.thumbnailUrl ?? 'https://i.imgur.com/C3QGaPB.jpeg';
+    const thumbnailUrl = metadata.thumbnailUrl ?? 'https://i.imgur.com/C3QGaPB.jpeg';
 
     return (
         <Slide direction="up" in={true}>
@@ -52,22 +53,19 @@ export function VideoEntry(props: { metadata: VideoMetadata; reload: () => void 
                     </Grid>
                     <Grid item xs={6} md={8}>
                         <div
-                            onMouseDown={(e) => {
-                                rippleRef.current?.start(e);
-                            }}
-                            onMouseUp={(e) => {
-                                rippleRef.current?.stop(e);
-                            }}
                             style={{
                                 position: 'relative',
                             }}
                         >
                             <Grid container width="100%">
-                                <Grid item xs={10} md={9} className="actionable">
+                                <Grid item xs={10} md={9} className={actionable['actionable']}>
                                     <Box padding="2em" onClick={() => play.mutate()}>
-                                        {/*<TouchRipple ref={rippleRef} center={false} /> */}
-                                        {props.metadata.filename}
-                                        <br />({props.metadata.duration ?? '??:??'})
+                                        {metadata.filename}
+                                        <br />(
+                                        {metadata.duration
+                                            ? humanReadableTime(metadata.duration)
+                                            : '??:??'}
+                                        )
                                     </Box>
                                 </Grid>
                                 <Grid
@@ -82,7 +80,7 @@ export function VideoEntry(props: { metadata: VideoMetadata; reload: () => void 
                                     <Box
                                         py="2em"
                                         alignSelf="center"
-                                        className="actionable"
+                                        className={actionable['actionable']}
                                         onClick={() => delete_.mutate()}
                                     >
                                         <DeleteForeverIcon />
@@ -95,4 +93,6 @@ export function VideoEntry(props: { metadata: VideoMetadata; reload: () => void 
             </Paper>
         </Slide>
     );
-}
+};
+
+export default VideoEntry;

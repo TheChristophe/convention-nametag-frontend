@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, Grid, Paper } from '@mui/material';
 import { makeThumbnailUrl } from './utility';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { HOST } from './config';
 import { Thumbnail } from './VideoEntry';
 
@@ -15,27 +15,25 @@ const videoFormats = [
     'video/x-ms-wmv', // .wmv
 ];
 
-export function VideoUpload({ reload }: { reload: () => void }) {
+type VideoUploadProps = { reload: () => void };
+const VideoUpload = ({ reload }: VideoUploadProps) => {
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
     const [file, setFile] = useState<File | undefined>();
 
-    const mutation = useMutation(
-        (data: File) => {
-            return fetch(HOST + '/videos/' + data.name, {
+    const mutation = useMutation({
+        mutationFn: (data: File) =>
+            fetch(HOST + '/videos/' + data.name, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
                 headers: { 'Content-Type': data.type },
                 body: data,
-            });
+            }),
+        onSuccess: () => {
+            setFile(undefined);
+            reload();
         },
-        {
-            onSuccess: () => {
-                setFile(undefined);
-                reload();
-            },
-        }
-    );
+    });
 
     function upload() {
         if (file !== undefined) {
@@ -79,7 +77,7 @@ export function VideoUpload({ reload }: { reload: () => void }) {
                                 variant="contained"
                                 component="label"
                                 onClick={upload}
-                                disabled={file === undefined || mutation.isLoading}
+                                disabled={file === undefined || mutation.isPending}
                             >
                                 Submit
                             </Button>
@@ -92,4 +90,6 @@ export function VideoUpload({ reload }: { reload: () => void }) {
             </Grid>
         </Paper>
     );
-}
+};
+
+export default VideoUpload;

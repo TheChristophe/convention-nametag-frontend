@@ -1,4 +1,4 @@
-export function makeThumbnailUrl(file: File, setThumbnailUrl: (url: string) => void) {
+export const makeThumbnailUrl = (file: File, setThumbnailUrl: (url: string) => void) => {
     // Credits to Aske Ertmann
     // Sourced from: https://stackoverflow.com/a/39754219
     let fileReader = new FileReader();
@@ -43,4 +43,4 @@ export function makeThumbnailUrl(file: File, setThumbnailUrl: (url: string) => v
         video.play();
     };
     fileReader.readAsArrayBuffer(file);
-}
+};

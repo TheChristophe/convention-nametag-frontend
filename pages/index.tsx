@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, createTheme, Stack, ThemeProvider } from '@mui/material';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import type { NextPage } from 'next';
-import { VideoUpload } from '../components/VideoUpload';
-import { VideoEntry } from '../components/VideoEntry';
-import { VideoMetadata } from '../components/VideoMetadata';
-import { HOST } from '../components/config';
+import VideoUpload from 'components/VideoUpload';
+import VideoEntry from 'components/VideoEntry';
+import type VideoMetadata from 'components/VideoMetadata';
+import { HOST } from 'components/config';
 
 const theme = createTheme();
 
@@ -14,14 +14,16 @@ type Videos = {
 };
 
 const Home: NextPage = () => {
-    const existingVideos = useQuery('videos', () =>
-        fetch(HOST + '/videos').then((res): Promise<Videos> => {
-            if (!res.ok) {
-                throw new Error(res.statusText);
-            }
-            return res.json();
-        })
-    );
+    const existingVideos = useQuery({
+        queryKey: ['videos'],
+        queryFn: () =>
+            fetch(HOST + '/videos').then((res): Promise<Videos> => {
+                if (!res.ok) {
+                    throw new Error(res.statusText);
+                }
+                return res.json();
+            }),
+    });
 
     return (
         <ThemeProvider theme={theme}>

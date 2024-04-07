@@ -1,1 +1,1 @@
-export const HOST = 'http://192.168.2.93:8080';
+export const HOST = 'http://192.168.2.117:8080';
