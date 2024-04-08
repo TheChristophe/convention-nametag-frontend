@@ -1,5 +1,5 @@
 type VideoMetadata = {
-    thumbnailUrl?: string;
+    thumbnail?: string;
     filename: string;
     duration?: number;
 };

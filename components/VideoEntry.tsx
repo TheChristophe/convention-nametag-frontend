@@ -42,7 +42,9 @@ const VideoEntry = ({ metadata, reload }: VideoEntryProps) => {
         },
     });
 
-    const thumbnailUrl = metadata.thumbnailUrl ?? 'https://i.imgur.com/C3QGaPB.jpeg';
+    const thumbnailUrl = metadata.thumbnail
+        ? `${HOST}/thumbnails/${metadata.thumbnail}`
+        : 'https://i.imgur.com/C3QGaPB.jpeg';
 
     return (
         <Slide direction="up" in={true}>
