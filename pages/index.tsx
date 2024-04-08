@@ -1,13 +1,10 @@
 import React from 'react';
-import { Container, createTheme, Stack, ThemeProvider } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import VideoUpload from 'components/VideoUpload';
 import VideoEntry from 'components/VideoEntry';
 import type VideoMetadata from 'components/VideoMetadata';
 import { HOST } from 'components/config';
-
-const theme = createTheme();
 
 type Videos = {
     videos: VideoMetadata[];
@@ -26,11 +23,11 @@ const Home: NextPage = () => {
     });
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container maxWidth="sm" sx={{ my: '2em' }}>
-                <VideoUpload reload={() => existingVideos.refetch()} />
-                <hr style={{ border: 0, height: '1px', background: '#CCC' }} />
-                <Stack spacing={2}>
+        <div className="container mx-auto flex justify-center items-center min-h-[100svh]">
+            <div className="mx-auto max-w-[80ch]">
+                <VideoUpload reload={() => existingVideos.refetch()} className="mb-2" />
+
+                <div className="flex flex-col gap-2">
                     {existingVideos.data?.videos.map((video) => (
                         <VideoEntry
                             key={video.filename}
@@ -38,9 +35,9 @@ const Home: NextPage = () => {
                             reload={() => existingVideos.refetch()}
                         />
                     ))}
-                </Stack>
-            </Container>
-        </ThemeProvider>
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Box, Button, Grid, Paper } from '@mui/material';
 import { makeThumbnailUrl } from './utility';
 import { useMutation } from '@tanstack/react-query';
 import { HOST } from './config';
 import { Thumbnail } from './VideoEntry';
+import clsx from 'clsx';
 
 const videoFormats = [
     'image/gif', // animated .gif
@@ -15,8 +15,8 @@ const videoFormats = [
     'video/x-ms-wmv', // .wmv
 ];
 
-type VideoUploadProps = { reload: () => void };
-const VideoUpload = ({ reload }: VideoUploadProps) => {
+type VideoUploadProps = { reload: () => void; className?: string };
+const VideoUpload = ({ reload, className }: VideoUploadProps) => {
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
     const [file, setFile] = useState<File | undefined>();
 
@@ -42,53 +42,39 @@ const VideoUpload = ({ reload }: VideoUploadProps) => {
     }
 
     return (
-        <Paper elevation={4}>
-            <Grid container width="100%">
-                <Grid item xs={6} md={4}>
-                    <Thumbnail thumbnailUrl={thumbnailUrl} />
-                </Grid>
-                <Grid item xs={6} md={8}>
-                    <div
-                        style={{
-                            position: 'relative',
+        <div className={clsx('border flex flex-row rounded shadow', className)}>
+            <div>
+                <Thumbnail thumbnailUrl={thumbnailUrl} />
+            </div>
+            <div>
+                <div className="p-2">
+                    <input
+                        type="file"
+                        //hidden
+                        accept={videoFormats.join(',')}
+                        onChange={(event) => {
+                            if (
+                                event.target &&
+                                event.target.files &&
+                                event.target.files.length > 0
+                            ) {
+                                const file = event.target.files[0];
+                                setFile(file);
+                                makeThumbnailUrl(file, setThumbnailUrl);
+                            }
                         }}
+                    />
+                    <button
+                        type="submit"
+                        onClick={upload}
+                        disabled={file === undefined || mutation.isPending}
+                        className="disabled:cursor-not-allowed"
                     >
-                        <Box sx={{ padding: '2em' }}>
-                            <Button variant="contained" component="label">
-                                Select
-                                <input
-                                    type="file"
-                                    hidden
-                                    accept={videoFormats.join(',')}
-                                    onChange={(event) => {
-                                        if (
-                                            event.target &&
-                                            event.target.files &&
-                                            event.target.files.length > 0
-                                        ) {
-                                            const file = event.target.files[0];
-                                            setFile(file);
-                                            makeThumbnailUrl(file, setThumbnailUrl);
-                                        }
-                                    }}
-                                />
-                            </Button>{' '}
-                            <Button
-                                variant="contained"
-                                component="label"
-                                onClick={upload}
-                                disabled={file === undefined || mutation.isPending}
-                            >
-                                Submit
-                            </Button>
-                            <br />
-                            {file?.name}
-                            <br />
-                        </Box>
-                    </div>
-                </Grid>
-            </Grid>
-        </Paper>
+                        Upload
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 
